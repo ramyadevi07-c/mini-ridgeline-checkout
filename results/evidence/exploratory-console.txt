@@ -1,0 +1,10 @@
+[MT-1] click Place order, cart empty + name blank: cart msg='Your cart is empty. Add an item to place your order.'; name msg='Enter the name for this order.'; confirmations=0
+[MT-1] type name, click Place order again, cart still empty: cart msg='Your cart is empty. Add an item to place your order.'; name msg visible=False; name kept='Asha Raman'; confirmations=0; focused element='Add to cart: Ridge Blend Coffe'
+[MT-2] 3 rapid clicks on Place order: button text right after='Placing order…', disabled=True
+[MT-2] after 2 s extra wait: confirmations=1, references=['RL-8ZUABD']
+[MT-2] Enter pressed twice in the name field: confirmations=1, references=['RL-H5UGQG']
+[MT-2] Start a new order after success: total=$0.00, name='', confirmations=0
+[EX-1] 80-character unbroken name, desktop: horizontal scroll=False
+[EX-1] same, 375 px wide phone: horizontal scroll=False
+[EX-2] 375 px cart: horizontal scroll=False
+[ALL] uncaught JS errors: []

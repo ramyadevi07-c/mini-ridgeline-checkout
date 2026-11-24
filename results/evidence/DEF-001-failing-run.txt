@@ -1,0 +1,56 @@
+FE                                                                       [100%]
+==================================== ERRORS ====================================
+__ ERROR at teardown of test_tc10_start_new_order_returns_to_a_clean_checkout __
+
+browser = <Browser type=<BrowserType name=chromium executable_path=/opt/pw-browsers/chromium-1243/chrome-linux64/chrome> version=157.0.8103.78>
+request = <SubRequest 'page' for <Function test_tc10_start_new_order_returns_to_a_clean_checkout>>
+
+    @pytest.fixture
+    def page(browser, request):
+        """A brand-new browser context per test: no cookies, storage or cart carry over."""
+        context = browser.new_context(viewport={"width": 1100, "height": 900})
+        page = context.new_page()
+        page.set_default_timeout(5000)
+        js_errors = []
+        page.on("pageerror", lambda e: js_errors.append(str(e)))
+        yield page
+        failed = getattr(request.node, "rep_call", None) and request.node.rep_call.failed
+        if failed:
+            ARTIFACTS.mkdir(parents=True, exist_ok=True)
+            page.screenshot(path=str(ARTIFACTS / f"FAILED-{request.node.name}.png"), full_page=True)
+        context.close()
+        # An uncaught JavaScript error is a defect even if the visible assertions passed.
+>       assert not js_errors, f"Uncaught JS errors: {js_errors}"
+E       AssertionError: Uncaught JS errors: ["Cannot read properties of undefined (reading 'id')"]
+E       assert not ["Cannot read properties of undefined (reading 'id')"]
+
+tests/conftest.py:43: AssertionError
+=================================== FAILURES ===================================
+____________ test_tc10_start_new_order_returns_to_a_clean_checkout _____________
+
+store = <checkout_page.CheckoutPage object at 0x7eff878303b0>
+
+    def test_tc10_start_new_order_returns_to_a_clean_checkout(store):
+        store.add("beans")
+        store.name.fill("Asha")
+        store.place_order.click()
+        expect(store.reference).to_be_visible()
+        store.page.get_by_role("button", name="Start a new order").click()
+        expect(store.confirmations).to_have_count(0)
+>       expect(store.total).to_have_text("$0.00")
+E       AssertionError: Locator expected to have text '$0.00'
+E       Actual value: $18.99 
+E       Call log:
+E         - Expect "to_have_text" get_by_test_id("order-total") with timeout 5000ms
+E         - waiting for get_by_test_id("order-total")
+E           14 × locator resolved to <output id="order-total" data-testid="order-total">$18.99</output>
+E              - unexpected value "$18.99"
+E       
+E       Aria snapshot:
+E       - status: $18.99
+
+tests/test_extended_checks.py:85: AssertionError
+=========================== short test summary info ============================
+ERROR tests/test_extended_checks.py::test_tc10_start_new_order_returns_to_a_clean_checkout
+FAILED tests/test_extended_checks.py::test_tc10_start_new_order_returns_to_a_clean_checkout
+1 failed, 13 deselected, 1 error in 6.83s

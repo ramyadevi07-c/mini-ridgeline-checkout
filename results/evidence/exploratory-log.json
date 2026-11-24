@@ -1,0 +1,52 @@
+[
+  {
+    "case": "MT-1",
+    "step": "click Place order, cart empty + name blank",
+    "observed": "cart msg='Your cart is empty. Add an item to place your order.'; name msg='Enter the name for this order.'; confirmations=0"
+  },
+  {
+    "case": "MT-1",
+    "step": "type name, click Place order again, cart still empty",
+    "observed": "cart msg='Your cart is empty. Add an item to place your order.'; name msg visible=False; name kept='Asha Raman'; confirmations=0; focused element='Add to cart: Ridge Blend Coffe'"
+  },
+  {
+    "case": "MT-2",
+    "step": "3 rapid clicks on Place order",
+    "observed": "button text right after='Placing order\u2026', disabled=True"
+  },
+  {
+    "case": "MT-2",
+    "step": "after 2 s extra wait",
+    "observed": "confirmations=1, references=['RL-4CUE7E']"
+  },
+  {
+    "case": "MT-2",
+    "step": "Enter pressed twice in the name field",
+    "observed": "confirmations=1, references=['RL-R7TBAE']"
+  },
+  {
+    "case": "MT-2",
+    "step": "Start a new order after success",
+    "observed": "total=$0.00, name='', confirmations=0"
+  },
+  {
+    "case": "EX-1",
+    "step": "80-character unbroken name, desktop",
+    "observed": "horizontal scroll=False"
+  },
+  {
+    "case": "EX-1",
+    "step": "same, 375 px wide phone",
+    "observed": "horizontal scroll=False"
+  },
+  {
+    "case": "EX-2",
+    "step": "375 px cart",
+    "observed": "horizontal scroll=False"
+  },
+  {
+    "case": "ALL",
+    "step": "uncaught JS errors",
+    "observed": "[]"
+  }
+]

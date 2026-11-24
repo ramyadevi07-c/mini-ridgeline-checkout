@@ -1,0 +1,518 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Checkout – Ridgeline Coffee</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="masthead">
+    <div class="brand-group">
+      <div class="brand-icon" aria-hidden="true">
+        <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M4 26L16 6l12 20H4z" fill="#2347c5" stroke="#1a388f"/>
+          <path d="M12 26l4-7 4 7H12z" fill="#ffffff" opacity="0.9"/>
+          <circle cx="16" cy="18" r="2" fill="#16202a"/>
+        </svg>
+      </div>
+      <div>
+        <p class="wordmark">Ridgeline Coffee</p>
+        <p class="masthead-note">Craft Roasters • Single-Origin & Blends</p>
+      </div>
+    </div>
+    <div class="masthead-security">
+      <button type="button" class="btn-walkthrough" id="open-walkthrough-btn" aria-haspopup="dialog" aria-label="Watch demo video walkthrough under 3 minutes">
+        <span class="play-icon" aria-hidden="true">▶</span> Watch Demo <span class="duration-pill">&lt; 3 mins</span>
+      </button>
+      <span class="secure-badge">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true">
+          <path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/>
+        </svg>
+        256-Bit SSL Encrypted
+      </span>
+      <span class="demo-tag">Demo Store • No real payment</span>
+    </div>
+  </header>
+
+  <!-- Progress Steps Bar -->
+  <div class="steps-nav" aria-label="Checkout Progress">
+    <div class="steps-container">
+      <span class="step-item step-complete"><span class="step-num">✓</span> Cart</span>
+      <span class="step-sep">›</span>
+      <span class="step-item step-active"><span class="step-num">2</span> Details & Fulfillment</span>
+      <span class="step-sep">›</span>
+      <span class="step-item"><span class="step-num">3</span> Payment</span>
+      <span class="step-sep">›</span>
+      <span class="step-item"><span class="step-num">4</span> Confirmation</span>
+    </div>
+  </div>
+
+  <form id="checkout-form" novalidate>
+    <main class="layout">
+      <!-- Left Column: Catalog & Checkout Details -->
+      <div class="main-col">
+        <!-- Catalog Section -->
+        <section class="panel-card shop" id="catalog-section" aria-labelledby="shop-heading">
+          <div class="section-header">
+            <div>
+              <h1 id="shop-heading">Choose your items</h1>
+              <p class="section-sub">Select artisan coffee and brew essentials for your order.</p>
+            </div>
+            <button type="button" class="text-link" id="toggle-catalog-btn" aria-expanded="true">
+              <span class="toggle-text">Collapse Catalog</span>
+            </button>
+          </div>
+          <ul class="products" id="product-list"></ul>
+        </section>
+
+        <!-- Contact Information (Guest Checkout) -->
+        <section class="panel-card form-section" aria-labelledby="contact-heading">
+          <div class="section-header">
+            <h2 id="contact-heading">1. Contact Details</h2>
+            <span class="guest-pill">Guest Checkout (No account needed)</span>
+          </div>
+
+          <div class="form-grid">
+            <div class="field full-width">
+              <label for="customer-name">Name for the order <span class="required" aria-hidden="true">*</span></label>
+              <input id="customer-name" name="name" type="text" autocomplete="name"
+                     maxlength="80" aria-required="true" aria-describedby="name-error"
+                     placeholder="e.g. Asha Raman">
+              <p id="name-error" class="error" role="alert" data-testid="name-error" hidden></p>
+            </div>
+
+            <div class="field half-width">
+              <label for="customer-email">Email address (for receipt & tracking)</label>
+              <input id="customer-email" name="email" type="email" autocomplete="email"
+                     placeholder="asha.raman@example.com">
+              <p id="email-error" class="error-inline" role="alert" hidden></p>
+            </div>
+
+            <div class="field half-width">
+              <label for="customer-phone">Mobile number (for delivery SMS)</label>
+              <input id="customer-phone" name="phone" type="tel" autocomplete="tel" inputmode="tel"
+                     placeholder="+1 (555) 019-2834">
+              <p id="phone-error" class="error-inline" role="alert" hidden></p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Delivery Address -->
+        <section class="panel-card form-section" aria-labelledby="shipping-heading">
+          <div class="section-header">
+            <h2 id="shipping-heading">2. Delivery Address</h2>
+            <button type="button" class="btn-chip" id="quick-fill-btn" title="Click to fill sample details for quick testing">
+              ⚡ Quick Demo Fill
+            </button>
+          </div>
+
+          <!-- Quick Address suggestions -->
+          <div class="suggestions-row" aria-label="Suggested locations">
+            <span class="suggestions-label">Suggestions:</span>
+            <button type="button" class="suggestion-chip" data-city="Seattle" data-state="WA" data-zip="98101">Seattle, WA</button>
+            <button type="button" class="suggestion-chip" data-city="Bengaluru" data-state="Karnataka" data-zip="560001">Bengaluru, KA</button>
+            <button type="button" class="suggestion-chip" data-city="Mumbai" data-state="Maharashtra" data-zip="400001">Mumbai, MH</button>
+            <button type="button" class="suggestion-chip" data-city="New York" data-state="NY" data-zip="10001">New York, NY</button>
+          </div>
+
+          <div class="form-grid">
+            <div class="field full-width">
+              <label for="delivery-street">House / Flat & Street address</label>
+              <input id="delivery-street" name="street" type="text" autocomplete="street-address"
+                     placeholder="e.g. 142 Pine Street, Apt 4B">
+            </div>
+
+            <div class="field full-width">
+              <label for="delivery-landmark">Landmark / Delivery notes (Optional)</label>
+              <input id="delivery-landmark" name="landmark" type="text"
+                     placeholder="e.g. Near Pioneer Square Fountain">
+            </div>
+
+            <div class="field one-third">
+              <label for="delivery-city">City</label>
+              <input id="delivery-city" name="city" type="text" autocomplete="address-level2"
+                     placeholder="Seattle">
+            </div>
+
+            <div class="field one-third">
+              <label for="delivery-state">State / Province</label>
+              <input id="delivery-state" name="state" type="text" autocomplete="address-level1"
+                     placeholder="WA">
+            </div>
+
+            <div class="field one-third">
+              <label for="delivery-zip">Postal / PIN code</label>
+              <input id="delivery-zip" name="zip" type="text" autocomplete="postal-code" inputmode="numeric"
+                     placeholder="98101">
+            </div>
+          </div>
+
+          <!-- Billing address checkbox -->
+          <div class="checkbox-field">
+            <label class="custom-checkbox">
+              <input type="checkbox" id="billing-same" checked>
+              <span>Billing address same as delivery address</span>
+            </label>
+          </div>
+
+          <!-- Expandable separate billing fields -->
+          <div id="billing-fields" class="expandable-section" hidden>
+            <h3 class="sub-heading">Billing Details</h3>
+            <div class="form-grid">
+              <div class="field full-width">
+                <label for="billing-name">Billing Contact / Company Name</label>
+                <input id="billing-name" name="billing_name" type="text" placeholder="Billing Name">
+              </div>
+              <div class="field full-width">
+                <label for="billing-street">Billing Street Address</label>
+                <input id="billing-street" name="billing_street" type="text" placeholder="Billing Address">
+              </div>
+              <div class="field half-width">
+                <label for="billing-city">Billing City</label>
+                <input id="billing-city" name="billing_city" type="text" placeholder="City">
+              </div>
+              <div class="field half-width">
+                <label for="billing-zip">Billing PIN / Postal code</label>
+                <input id="billing-zip" name="billing_zip" type="text" placeholder="PIN code">
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Fulfillment Options -->
+        <section class="panel-card form-section" aria-labelledby="fulfillment-heading">
+          <div class="section-header">
+            <h2 id="fulfillment-heading">3. Fulfillment Option</h2>
+            <span class="section-sub">Select delivery speed</span>
+          </div>
+
+          <div class="fulfillment-options" role="radiogroup" aria-label="Delivery options">
+            <label class="option-card active" id="card-standard">
+              <input type="radio" name="fulfillment" value="standard" checked>
+              <div class="option-content">
+                <div class="option-header">
+                  <span class="option-title">Standard Delivery</span>
+                  <span class="option-price badge-free">FREE</span>
+                </div>
+                <p class="option-meta">Estimated arrival: <strong>3–5 business days</strong></p>
+                <p class="option-desc">Carbon-neutral ground shipping straight from the roastery.</p>
+              </div>
+            </label>
+
+            <label class="option-card" id="card-express">
+              <input type="radio" name="fulfillment" value="express">
+              <div class="option-content">
+                <div class="option-header">
+                  <span class="option-title">Express Priority Delivery</span>
+                  <span class="option-price">$5.00</span>
+                </div>
+                <p class="option-meta">Estimated arrival: <strong>1–2 business days</strong></p>
+                <p class="option-desc">Fast air dispatch with live SMS tracking.</p>
+              </div>
+            </label>
+
+            <label class="option-card" id="card-pickup">
+              <input type="radio" name="fulfillment" value="pickup">
+              <div class="option-content">
+                <div class="option-header">
+                  <span class="option-title">Roastery Store Pickup</span>
+                  <span class="option-price badge-free">FREE</span>
+                </div>
+                <p class="option-meta">Ready in <strong>2 hours</strong> at Ridgeline Downtown</p>
+                <p class="option-desc">Pick up freshly roasted beans with complimentary espresso tasting.</p>
+              </div>
+            </label>
+          </div>
+        </section>
+
+        <!-- Payment Methods & Trust Signals -->
+        <section class="panel-card form-section" aria-labelledby="payment-heading">
+          <div class="section-header">
+            <h2 id="payment-heading">4. Payment Method</h2>
+            <span class="guest-pill">🔒 256-Bit SSL Demo Gateway</span>
+          </div>
+
+          <!-- Payment Tabs -->
+          <div class="payment-tabs" role="tablist" aria-label="Payment Methods">
+            <button type="button" class="pay-tab active" role="tab" aria-selected="true" data-tab="upi">
+              <span class="tab-icon">⚡</span> UPI / QR
+            </button>
+            <button type="button" class="pay-tab" role="tab" aria-selected="false" data-tab="card">
+              <span class="tab-icon">💳</span> Card
+            </button>
+            <button type="button" class="pay-tab" role="tab" aria-selected="false" data-tab="netbanking">
+              <span class="tab-icon">🏦</span> Net Banking
+            </button>
+            <button type="button" class="pay-tab" role="tab" aria-selected="false" data-tab="wallets">
+              <span class="tab-icon">👛</span> Wallets / BNPL
+            </button>
+          </div>
+
+          <!-- Payment Tab Panels -->
+          <div class="payment-panel" id="tab-upi" role="tabpanel">
+            <p class="pay-intro">Instant payment via any UPI app or UPI ID:</p>
+            <div class="upi-apps">
+              <span class="app-chip">Google Pay</span>
+              <span class="app-chip">PhonePe</span>
+              <span class="app-chip">Paytm</span>
+              <span class="app-chip">BHIM</span>
+            </div>
+            <div class="field">
+              <label for="upi-id">Enter UPI ID / VPA</label>
+              <div class="input-with-button">
+                <input id="upi-id" type="text" placeholder="username@okhdfcbank">
+                <button type="button" class="secondary verify-btn" id="verify-upi-btn">Verify</button>
+              </div>
+              <span class="field-hint">A payment request will be sent to your UPI app upon ordering.</span>
+            </div>
+          </div>
+
+          <div class="payment-panel" id="tab-card" role="tabpanel" hidden>
+            <div class="card-icons-row" aria-label="Supported cards">
+              <span class="card-badge">VISA</span>
+              <span class="card-badge">Mastercard</span>
+              <span class="card-badge">RuPay</span>
+              <span class="card-badge">AMEX</span>
+            </div>
+            <div class="form-grid">
+              <div class="field full-width">
+                <label for="card-number">Card Number</label>
+                <input id="card-number" type="text" inputmode="numeric" maxlength="19" placeholder="4111 •••• •••• 1111">
+              </div>
+              <div class="field half-width">
+                <label for="card-expiry">Expiry Date</label>
+                <input id="card-expiry" type="text" inputmode="numeric" maxlength="5" placeholder="MM/YY">
+              </div>
+              <div class="field half-width">
+                <label for="card-cvv">CVV / CVC</label>
+                <input id="card-cvv" type="password" inputmode="numeric" maxlength="4" placeholder="123">
+              </div>
+              <div class="field full-width">
+                <label for="card-name">Name on Card</label>
+                <input id="card-name" type="text" placeholder="As printed on card">
+              </div>
+            </div>
+          </div>
+
+          <div class="payment-panel" id="tab-netbanking" role="tabpanel" hidden>
+            <p class="pay-intro">Select your bank for instant online transfer:</p>
+            <div class="bank-grid">
+              <label class="bank-pill"><input type="radio" name="bank" value="HDFC" checked> HDFC Bank</label>
+              <label class="bank-pill"><input type="radio" name="bank" value="ICICI"> ICICI Bank</label>
+              <label class="bank-pill"><input type="radio" name="bank" value="SBI"> State Bank of India</label>
+              <label class="bank-pill"><input type="radio" name="bank" value="Axis"> Axis Bank</label>
+            </div>
+          </div>
+
+          <div class="payment-panel" id="tab-wallets" role="tabpanel" hidden>
+            <p class="pay-intro">Choose digital wallet or Pay Later partner:</p>
+            <div class="wallet-list">
+              <label class="wallet-option"><input type="radio" name="wallet" value="apple" checked> Apple Pay / Google Pay</label>
+              <label class="wallet-option"><input type="radio" name="wallet" value="amazon"> Amazon Pay Balance</label>
+              <label class="wallet-option"><input type="radio" name="wallet" value="simpl"> Simpl Pay Later (Pay in 15 days)</label>
+            </div>
+          </div>
+
+          <!-- Trust Badges Row -->
+          <div class="trust-footer">
+            <div class="trust-item">
+              <span class="trust-icon">🛡️</span>
+              <span>PCI-DSS Level 1</span>
+            </div>
+            <div class="trust-item">
+              <span class="trust-icon">🔒</span>
+              <span>256-Bit TLS Encryption</span>
+            </div>
+            <div class="trust-item">
+              <span class="trust-icon">☕</span>
+              <span>Fresh Roast Guarantee</span>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- Right Column: Sticky Cart & Order Summary -->
+      <div class="order-col">
+        <section class="panel receipt" id="receipt-panel" aria-labelledby="cart-heading">
+          <div class="receipt-header">
+            <h2 id="cart-heading" tabindex="-1">Your order</h2>
+            <span class="cart-count-badge" id="cart-count-badge" hidden>0 items</span>
+          </div>
+
+          <p id="cart-empty" class="empty">Nothing here yet. Add an item from the list.</p>
+          <ul id="cart-lines" class="lines"></ul>
+          <p id="cart-notice" class="notice" role="status"></p>
+          <p id="cart-error" class="error" role="alert" data-testid="cart-error" hidden></p>
+
+          <!-- Promo Code Input -->
+          <div class="promo-box" id="promo-box">
+            <label for="promo-input" class="promo-label">Promo / Coupon Code</label>
+            <div class="promo-input-group">
+              <input type="text" id="promo-input" placeholder="e.g. RIDGE10" maxlength="20" aria-label="Promo code">
+              <button type="button" id="apply-promo" class="secondary btn-promo">Apply</button>
+            </div>
+            <div id="promo-applied" class="promo-applied" hidden>
+              <span class="promo-badge" id="promo-badge-text">RIDGE10 applied</span>
+              <button type="button" id="remove-promo" class="remove-promo-btn" aria-label="Remove promo code">✕ Remove</button>
+            </div>
+            <p id="promo-msg" class="promo-feedback" role="status"></p>
+          </div>
+
+          <!-- Order Summary Breakdown -->
+          <div class="breakdown-table" aria-label="Order Price Breakdown">
+            <div class="breakdown-row">
+              <span>Items Subtotal</span>
+              <span id="breakdown-subtotal">$0.00</span>
+            </div>
+            <div class="breakdown-row discount-row" id="breakdown-discount-row" hidden>
+              <span>Promo Discount (<span id="discount-label">RIDGE10</span>)</span>
+              <span id="breakdown-discount">-$0.00</span>
+            </div>
+            <div class="breakdown-row">
+              <span>Delivery / Fulfillment</span>
+              <span id="breakdown-delivery">FREE</span>
+            </div>
+            <div class="breakdown-row tax-row">
+              <span>Estimated GST / Tax <span class="tax-note">(5% included)</span></span>
+              <span id="breakdown-tax">$0.00</span>
+            </div>
+          </div>
+
+          <!-- Total Row -->
+          <div class="total-row">
+            <span>Order total</span>
+            <output id="order-total" data-testid="order-total">$0.00</output>
+          </div>
+
+          <!-- Primary CTA Button (Inside receipt panel so it stays in view) -->
+          <button type="submit" id="place-order" class="primary cta-btn">
+            Place order • <span id="btn-total">$0.00</span>
+          </button>
+
+          <!-- Policy Links -->
+          <div class="policy-links" aria-label="Store Policies">
+            <button type="button" class="policy-link" data-policy="refund">Return & Refund Policy</button>
+            <span class="policy-sep">•</span>
+            <button type="button" class="policy-link" data-policy="cancellation">Cancellation Policy</button>
+            <span class="policy-sep">•</span>
+            <button type="button" class="policy-link" data-policy="privacy">Privacy & Terms</button>
+          </div>
+
+          <!-- Support Fallback -->
+          <div class="support-fallback" aria-label="Customer Support">
+            <p class="support-title">Need help with checkout?</p>
+            <div class="support-channels">
+              <a href="tel:18007434326" class="support-link">
+                <span class="support-icon">📞</span> 1-800-RIDGE-COFFEE
+              </a>
+              <span class="support-sep">|</span>
+              <a href="mailto:support@ridgelinecoffee.demo" class="support-link">
+                <span class="support-icon">✉️</span> support@ridgelinecoffee.demo
+              </a>
+            </div>
+          </div>
+        </section>
+
+        <div id="confirmations"></div>
+      </div>
+    </main>
+  </form>
+
+  <!-- Accessible Policy Modal -->
+  <dialog id="policy-modal" class="policy-modal" aria-labelledby="modal-title">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 id="modal-title">Policy</h3>
+        <button type="button" class="modal-close-btn" id="modal-close" aria-label="Close dialog">✕</button>
+      </div>
+      <div class="modal-body" id="modal-body"></div>
+      <div class="modal-footer">
+        <button type="button" class="primary modal-ok-btn" id="modal-ok">I Understand</button>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- Demo Walkthrough Modal -->
+  <dialog id="walkthrough-modal" class="walkthrough-modal" aria-labelledby="walkthrough-title">
+    <div class="modal-card walkthrough-card">
+      <div class="modal-header">
+        <div class="modal-title-group">
+          <h3 id="walkthrough-title">🎥 Ridgeline Coffee Checkout – Demo Walkthrough</h3>
+          <span class="duration-badge">⏱️ Under 3 minutes</span>
+        </div>
+        <button type="button" class="modal-close-btn" id="walkthrough-close" aria-label="Close dialog">✕</button>
+      </div>
+      <div class="modal-body walkthrough-body">
+        <!-- Video Container -->
+        <div class="video-container">
+          <video id="demo-video-player" controls preload="metadata" poster="../results/evidence/UI-cart-filled.png">
+            <source src="../results/evidence/exploratory-session.webm" type="video/webm">
+            Your browser does not support the video tag.
+          </video>
+          <div class="video-link-bar">
+            <span class="video-link-label">Video URL:</span>
+            <a href="[PASTE YOUR DEMO VIDEO LINK HERE]" target="_blank" rel="noopener noreferrer" class="demo-video-link" id="demo-video-external-link">
+              🔗 [PASTE YOUR DEMO VIDEO LINK HERE]
+            </a>
+          </div>
+        </div>
+
+        <p class="walkthrough-caption">
+          <strong>Walkthrough Overview (Under 3 mins):</strong> This video demonstrates the complete checkout experience, including live quantity calculations, decrement-to-zero item removal, error validation with state preservation, rapid double-click protection (idempotency), multi-option fulfillment, promo discounts, and automated test execution.
+        </p>
+
+        <!-- Presenter Narration Script / Voiceover Guide -->
+        <details class="script-details" open>
+          <summary class="script-summary">
+            <span>🎙️ Presenter Narration Script (Voiceover Guide)</span>
+          </summary>
+          <div class="script-content">
+            <div class="script-block">
+              <span class="script-timestamp">0:00 – 0:30</span>
+              <strong>Introduction & Catalog Setup</strong>
+              <p>"Welcome to the Ridgeline Coffee mini-checkout demonstration. This single-page application is built using lightweight, dependency-free vanilla HTML, CSS, and JavaScript. We have two core craft products with fixed pricing: our signature Ridge Blend Coffee Beans at $18.99 and Paper Filters at $4.49. Customers can select their preferred grind size or filter pack style directly from the catalog before adding to their cart."</p>
+            </div>
+
+            <div class="script-block">
+              <span class="script-timestamp">0:30 – 1:00</span>
+              <strong>Live Cart & Exact Integer Calculations</strong>
+              <p>"Adding an item updates the badge and populates the itemized order summary. Line totals and overall order total calculate live on every change. All calculations use integer cents, avoiding common floating-point precision flaws. You can increase or decrease quantities with stepper buttons or type directly in the quantity input. Decreasing a quantity to zero seamlessly removes the line item and updates the live total immediately."</p>
+            </div>
+
+            <div class="script-block">
+              <span class="script-timestamp">1:00 – 1:40</span>
+              <strong>Error Handling & State Preservation</strong>
+              <p>"Next, we demonstrate common checkout mistake handling. If a customer attempts to place an order with an empty cart, checkout is blocked and a clear error notification appears. If the customer enters items but leaves the 'Name for the order' blank—or enters only whitespace—submission is blocked, the field is highlighted with aria-invalid, and focus shifts to the name input. Crucially, all cart items, quantities, and entered details are fully preserved."</p>
+            </div>
+
+            <div class="script-block">
+              <span class="script-timestamp">1:40 – 2:15</span>
+              <strong>Double-Click Protection & Idempotency</strong>
+              <p>"Now let’s look at double-click protection. When placing a valid order, the submit button locks immediately into a disabled 'Placing order…' state, setting aria-busy and activating our internal state machine. Even if rapid repeated clicks or duplicate submit events are fired, only a single order is processed. The receipt transforms into a single Order Confirmed card featuring a cryptographically random, unique order reference ID and full order details."</p>
+            </div>
+
+            <div class="script-block">
+              <span class="script-timestamp">2:15 – 2:45</span>
+              <strong>Fulfillment, Promo Engine & Payment Signals</strong>
+              <p>"The checkout flow also provides transparent price breakdowns: dynamic promo code discounts like RIDGE10, fulfillment options including Free Standard Delivery, $5 Express Delivery, and Store Pickup, plus conditional payment tabs for UPI, Cards, Net Banking, and Wallets with trust signals and accessible store policy modals."</p>
+            </div>
+
+            <div class="script-block">
+              <span class="script-timestamp">2:45 – 3:00</span>
+              <strong>Verification & Exit Criteria</strong>
+              <p>"Finally, the entire application is backed by an automated Playwright test suite covering all required checks and extended regression tests with 100% pass rate, zero uncaught JavaScript errors, and 6 out of 6 mutation check faults caught. Thank you for watching."</p>
+            </div>
+          </div>
+        </details>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="primary modal-ok-btn" id="walkthrough-ok">Close Walkthrough</button>
+      </div>
+    </div>
+  </dialog>
+
+  <p class="sr-only" id="sr-status" role="status"></p>
+  <script src="app.js"></script>
+</body>
+</html>
